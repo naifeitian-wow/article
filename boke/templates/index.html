@@ -1,0 +1,329 @@
+<head>
+{#    <link rel="stylesheet" href="/static/css/hua.css">#}
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Slicebox - 3D Image Slider with Fallback" />
+    <meta name="keywords" content="jquery, css3, 3d, webkit, fallback, slider, css3, 3d transforms, slices, rotate, box, automatic" />
+    <meta name="author" content="Pedro Botelho for Codrops" />
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" type="text/css" href="/static/css/demo.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/slicebox.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/custom.css" />
+    <script src="/static/js/jquery.js"></script>
+    <script src="/static/js/bootstrap.js"></script>
+
+    <style>
+		h1 {
+			margin-top: 100px;
+			font-family: 'Microsoft Yahei';
+			font-size: 36px;
+			color: #019157;
+		}
+        .top-banner,.clearfix{
+            display: none !important;
+        }
+        #myCarousel{
+            width:700px;
+            left:0;
+        }
+        #sb-slider{
+            margin: 0;
+            max-width: 100% !important;
+        }
+        body{
+            width:100%;
+            background-color: rgba(211, 211, 211, 0.15) !important;
+            height: 100% !important;
+        }
+
+        #all{
+            position: relative;
+            display: flex;
+            flex-wrap: wrap;
+            top:100px;
+            margin-bottom: 150px;
+        }
+        #right{
+            width: 300px;
+            height: 326px;
+            font-size: 20px;
+            font-style: italic;
+            background:linear-gradient(white,darkgray) ;
+        }
+
+
+        #leftbody{
+            width:70%;
+            border-collapse: collapse;
+            margin-top: 30px;
+        }
+        .recommend{
+            width:100%;
+            height: 200px;
+            display: flex;
+            border-top: 1px solid black;
+            margin-top:20px;
+        }
+        .recommend:hover{
+            box-shadow: 5px 5px 5px gray;
+        }
+        #newArticle{
+             width:100%;
+            border-top: 1px solid black;
+            margin-top:20px;
+        }
+        .newArticle{
+            font-size: 20px;
+            color:black !important;
+        }
+
+        #rightbody{
+            width:25%;
+            height: 500px;
+            padding-top: 50px;
+            padding-left: 30px;
+            margin-top:30px;
+            position: relative;
+            left:50px;
+        }
+        #footer{
+            position: absolute;
+            bottom: 10px !important;
+        }
+        @media (max-width: 450px){
+            #leftbody{
+                width:90% !important;
+            }
+        }
+        @media (max-width: 800px){
+            .img{
+                width:100% !important;
+            }
+        }
+        @media (max-width: 800px){
+            .right,#rightbody{
+                display: none;
+            }
+        }
+        @media (max-width: 1200px){
+            #right{
+                display: none;
+            }
+        }
+
+    </style>
+    <script type="text/javascript" src="/static/js/modernizr.custom.46884.js"></script>
+</head>
+{% extends 'base.html' %}
+
+
+{% block body %}
+    <div id="father">
+         <div id="all" class="container">
+         <div class="wrapper" id="myCarousel">
+				<ul id="sb-slider" class="sb-slider">
+                    {% for article in newarticle %}
+					<li>
+						<a  href="/article/detail/{{ article.id }}/1/"><img src="/{{ article.tupian }}" alt="image1" style="width: 100%;height: 320px;"/></a>
+					</li>
+                    {% endfor %}
+
+				</ul>
+
+				<div id="shadow" class="shadow"></div>
+
+				<div id="nav-arrows" class="nav-arrows">
+					<a href="#">Next</a>
+					<a href="#">Previous</a>
+				</div>
+
+			</div>
+
+    <div id="right">
+{#        <iframe src="/index/city/" frameborder="1" width="100%" height="100%"></iframe>#}
+    </div>
+
+
+    <div id="leftbody">
+        <h2 style="text-align: left">最新文章</h2>
+        <div id="newArticle">
+            {% for article in newarticle %}
+                <div class="newArticle">
+                 <span>{{ article.category }}</span>:&#x3000;<a style="color:black;font-size:16px;" href="/article/detail/{{ article.id }}/1/">{{ article.title }}</a>
+                </div>
+            {% endfor %}
+        </div>
+        <h2 style="text-align: left">推荐文章</h2>
+        {% for article in articles %}
+            <div class="recommend">
+                <img class="img" src="/{{ article.tupian }}" alt="" style="width: 30%; height: 90%;margin-right: 30px;position:relative;top:5%;">
+                <div class="right" style="width: 65%;position:relative;">
+                    <div><a href="/article/detail/{{ article.id }}/1/"><h3>{{ article.title }}</h3></a></div>
+                    <div><span class="content">{{ article.jianjie }}</span>...<a href="/article/detail/{{ article.id }}/1/">详情</a></div>
+                    <section id="footer">
+                    <span class="glyphicon glyphicon-user">{{ article.author }}</span>&#x3000;
+                    <span class="glyphicon glyphicon-time">{{ article.create_time }}</span>&#x3000;
+                    <span class="glyphicon glyphicon-thumbs-up">{{ article.popular }}</span>
+                </section>
+                </div>
+
+            </div>
+        {% endfor %}
+    </div>
+    <div id="rightbody">
+        <h4>qq交流群：869914973</h4>
+        <span>微信公众号（佛系公众号）：</span>
+        <img src="/static/images/wx.jpg" style="width:200px;height: 200px;" alt="">
+    </div>
+    </div>
+
+
+{#     <section>#}
+{#        <main>#}
+{#            <div></div>#}
+{#            <div></div>#}
+{#            <div></div>#}
+{#        </main>#}
+{#    </section>#}
+    </div>
+
+    <script>
+        (function($) {
+        $.fn.snow = function(options) {
+        var $flake = $('<div id="flake" />').css({
+        'position': 'absolute',
+        'top': '-50px'
+        }).html('&#10052;'),
+        documentHeight = $(document).height(),
+        documentWidth = $(document).width(),
+        defaults = {
+        minSize: 10,
+        maxSize: 20,
+        newOn: 500,
+        flakeColor: "#FFFFFF"
+        },
+        options = $.extend({},
+        defaults, options);
+        var interval = setInterval(function() {
+        var startPositionLeft = Math.random() * documentWidth - 100,
+        startOpacity = 0.5 + Math.random(),
+        sizeFlake = options.minSize + Math.random() * options.maxSize,
+        endPositionTop = documentHeight - 40,
+        endPositionLeft = startPositionLeft - 100 + Math.random() * 200,
+        durationFall = documentHeight * 10 + Math.random() * 5000;
+        $flake.clone().appendTo('body').css({
+        left: startPositionLeft,
+        opacity: startOpacity,
+        'font-size': sizeFlake,
+        color: options.flakeColor
+        }).animate({
+        top: endPositionTop,
+        left: endPositionLeft,
+        opacity: 0.2
+        },
+        durationFall, 'linear',
+        function() {
+        $(this).remove()
+        });
+        },
+        options.newOn);
+        };
+        })(jQuery);
+        $.fn.snow({
+        minSize: 5,
+        maxSize: 50,
+        newOn: 1000,
+        flakeColor: '#FFF'
+        });
+    </script>
+    <script>
+        $(function () {
+            var seconds=5
+            timeInterval=setInterval(function () {
+                if(seconds>0){
+                    if(seconds==5){
+                       $('#right').append('<h3>冥思苦想半天这个地方不知道放啥</h3>')
+                        {#$('#span1').text('冥思苦想半天这个地方不知道放啥')#}
+                    }
+                    if(seconds==4){
+                        $('#right').append('<h3>那就随便说说话吧</h3>')
+                        {#$('#span2').text('那就随便说说话吧')#}
+                    }
+                    if(seconds==3){
+                        $('#right').append('<h3>但关键说也不知道说啥</h3>')
+                        {#$('#span3').text('但关键说也不知道说啥。。')#}
+                    }
+                    if(seconds==2){
+                        $('#right').append('<h3>那么就</h3>')
+                        {#$('#span4').text('那么就')#}
+                    }
+                    if(seconds==1){
+                         $('#right').append('<h3>提前给大家拜个早年了</h3>')
+                        {#$('#span5').text('提前给大家拜个早年了')#}
+                    }
+                    seconds--
+
+                }
+                else{
+                    {#$('#right').text('已失效')#}
+                }
+            },1000)
+        })
+    </script>
+
+    <script type="text/javascript" src="http://cdn.staticfile.org/jquery/1.8.2/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.slicebox.js"></script>
+    <script type="text/javascript">
+        $(function() {
+
+            var Page = (function() {
+
+                var $navArrows = $( '#nav-arrows' ).hide(),
+                    $shadow = $( '#shadow' ).hide(),
+                    slicebox = $( '#sb-slider' ).slicebox( {
+                        onReady : function() {
+
+                            $navArrows.show();
+                            $shadow.show();
+
+                        },
+                        orientation : 'r',
+                        cuboidsRandom : true,
+                        disperseFactor : 30
+                    } ),
+
+                    init = function() {
+
+                        initEvents();
+
+                    },
+                    initEvents = function() {
+
+                        // add navigation events
+                        $navArrows.children( ':first' ).on( 'click', function() {
+
+                            slicebox.next();
+                            return false;
+
+                        } );
+
+                        $navArrows.children( ':last' ).on( 'click', function() {
+
+                            slicebox.previous();
+                            return false;
+
+                        } );
+
+                    };
+
+                    return { init : init };
+
+            })();
+
+            Page.init();
+
+        });
+    </script>
+    <script src="http://dreamsky.github.io/main/blog/common/init.js"></script>
+{% endblock %}

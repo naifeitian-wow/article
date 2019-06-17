@@ -1,0 +1,255 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/static/css/reset.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/css/dcalendar.picker.css">
+    <link rel="stylesheet" href="/static/css/animate.css">
+    <title>{% block title %}登峰造极境{% endblock %}</title>
+
+    <style>
+        #head{
+            margin-bottom: 20px;
+            height: 80px;
+            width:100%;
+            box-shadow: 5px 5px 5px gray;
+            position: fixed;
+            z-index: 999;
+        }
+        #a1{
+            height: 80px !important;
+            line-height:unset;
+            font-size: 34px;
+            margin-right:30px;
+        }
+        #ul{
+            position: relative;
+            top:13px;
+        }
+        .div{
+            float: left;
+            height: 80px;
+            width: 150px;
+            font-size:25px;
+            line-height: 80px;
+
+            text-align: center;
+        }
+        .div:hover{
+            background-color: lightgray;
+            cursor: pointer;
+        }
+        .wenzhang{
+            height: 40px !important;
+            font-size:20px;
+        }
+        .wenzhang>a{
+            color:dodgerblue !important;
+        }
+        a{
+            text-decoration: none !important;
+        }
+        @media (max-width: 800px){
+            .div{
+                display: none;
+            }
+        }
+        @media (max-width: 1000px){
+            #ul{
+                display: none;
+            }
+        }
+        @media (max-width: 1300px){
+            #hello{
+                display: none;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+
+<body>
+    <nav id="head" class="navbar navbar-default" role="navigation">
+    <div  class="container">
+        <div class="navbar-header ">
+            <a id="a1" class="navbar-brand" href="{% url 'index:index' %}">登封造极境</a>
+
+            <div class="div" onmouseleave="leave()" onmouseover="over()" onclick="list()">
+            <li id="over" class="dropdown">
+                <a  class="dropdown-toggle"  data-toggle="dropdown">文章分类<span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    {% for category in categorys %}
+                    <li class="wenzhang bounceInLeft animated"><a href="/list/{{ category.id }}/1/">{{ category.category_name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </li></div>
+
+            <div class="div"><a href="{% url 'mouse'%}">打地鼠</a></div>
+            <div class="div"><a href="{% url 'piano' %}">钢琴</a></div>
+
+        </div>
+
+        <ul id="ul" class="nav navbar-nav navbar-right">
+            {% if request.session.username %}
+                <li><a id="hello" class=" btn-lg" data-toggle="modal"><span >Hello!</span> {{ request.session.username }}</a></li>
+                <li><a class="btn btn-default btn-lg" href="{% url 'index:exit' %}" data-toggle="modal"><span ></span> 退出</a></li>
+                <li><a class="btn btn-default btn-default" data-toggle="modal" href="/login/"><span class="glyphicon glyphicon-user"></span> 个人中心</a></li>
+            {% else %}
+            <li><a class="btn btn-success btn-lg" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-registration-mark"></span> 注册</a></li>
+            <li><a class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal2"><span class="glyphicon glyphicon-log-in"></span> 登录</a></li>
+            <li><a class="btn btn-default btn-default" data-toggle="modal" href="/"><span class="glyphicon glyphicon-user"></span> 个人中心</a></li>
+            {% endif %}
+
+        </ul>
+    </div>
+</nav>
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">注册</h4>
+            </div>
+            <form id="register" action="/" method="POST">
+            {% csrf_token %}
+            <div class="modal-body">
+
+                    <span>用户名:</span><br>
+                    <input type="text" id="username" name="username"><span id="usererror" style="color:red;"></span><br><br>
+                    <span>密码:</span><br>
+                    <input type="password" id="password" name="password"><span id="passworderror" style="color:red;"></span><br><br>
+                     <span>确认密码:</span><br>
+                    <input type="password" id="again" name="again"><span id="againerror" style="color:red;"></span><br>
+                    <span style="color: red">{{ error }}</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="submit" id="register" onclick="return fun()" class="btn btn-primary">提交</button>
+            </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+    <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">登录</h4>
+            </div>
+            <form action="/login/" method="POST">
+                {% csrf_token %}
+            <div class="modal-body">
+                <span>用户名:</span><br>
+                    <input type="text" id="username2" name="username"><span id="usererror2" style="color:red;"></span><br><br>
+                    <span>密码:</span><br>
+                    <input type="password" id="password2" name="password"><span id="passworderror2" style="color:red;"></span><br><br>
+                    <span style="color: red">{{ error2 }}</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="submit" class="btn btn-primary" onclick="return fun2()">登录</button>
+            </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+    <script type="text/javascript" src="/static/js/jquery-1.12.4.min.js"></script>
+	<script type="text/javascript" src="/static/js/register.js"></script>
+    <script type="text/javascript" src="/static/js/login.js"></script>
+    <script src="/static/js/jquery.js"></script>
+    <script src="/static/js/bootstrap.js"></script>
+    {% block body %}
+    {% endblock %}
+
+
+    <script>
+        if($('#hello').text().length>16){
+            var hello=$('#hello').text().substr(0,16)
+            $('#hello').text(hello+'...')
+        }
+
+        function list() {
+            window.location.href='/list/0/1/'
+        }
+        function fun(){
+                if($('#username').val().length>12||$('#username').val()=='' || $('#password').val()=='' || $('#again').val()==''){
+                    if($('#username').val().length> 12){
+                        $('#usererror').text('用户名长度不能大于12')
+                    }
+                    if($('#username').val()==''){
+                        $('#usererror').text('用户名不能为空')
+                    }
+                    if($('#password').val()==''){
+                        $('#passworderror').text('密码不能为空')
+                    }
+                    if($('#again').val()!=$('#password').val()){
+                        $('#againerror').text('密码必须一致')
+                    }
+                    return false
+                }else{
+                    return true
+                }
+                }
+        function fun2(){
+                if($('#username2').val()=='' || $('#password2').val()==''){
+                    return false
+                }else{
+                    return true
+                }
+                }
+        function over(){
+            $('#over').attr('class','dropdown open')
+        }
+        function leave(){
+            $('#over').attr('class','dropdown')
+        }
+        $(function () {
+            $('#username').blur(function () {
+                if($(this).val().length==0){
+                    $('#usererror').html('账号不能为空').show()
+                }
+                else if($(this).val().length>12){
+                    $('#usererror').html('账号长度不能大于12').show()
+                }
+                else{
+                    $('#usererror').hide()
+                }
+            })
+            $('#password').blur(function () {
+                if($(this).val().length==0){
+                    $('#passworderror').html('密码不能为空').show()
+                }else{
+                    $('#passworderror').hide()
+                }
+            })
+
+            $('#username2').blur(function () {
+                if($(this).val().length==0){
+                    $('#usererror2').html('账号不能为空').show()
+                }else{
+                    $('#usererror2').hide()
+                }
+            })
+            $('#password2').blur(function () {
+                if($(this).val().length==0){
+                    $('#passworderror2').html('密码不能为空').show()
+                }else{
+                    $('#passworderror2').hide()
+                }
+            })
+
+        })
+    </script>
+
+</body>
+</html>

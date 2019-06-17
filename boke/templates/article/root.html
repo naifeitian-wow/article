@@ -1,0 +1,80 @@
+<head>
+    <style>
+        #form{
+            position: relative;
+            top:150px;
+            z-index: 1;
+        }
+        .w-e-text-container{
+            height:600px !important;
+        }
+    </style>
+</head>
+{% extends 'base.html' %}
+
+{% block body %}
+    <div class="container">
+    <form id="form" action="/article/list/" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <span>标题：</span>
+    <input  id="title" type="text" style="width:50%;line-height: 30px;" name="title" placeholder="标题不要超过40个字"><br><br>
+    <span>内容：</span><br><br>
+    <input type="hidden" id="content" name="content">
+    <input type="hidden" id="htmlcontent" name="htmlcontent">
+    <div id="editor">
+    </div>
+        <br>
+    <span>请选择文章分类：</span>
+    <div>
+        <select name="category_id" style="width:150px;height: 30px;">
+            {% for category in categorys%}
+            <option value="{{category.id}}">{{ category.category_name }}</option>
+            {% endfor%}
+        </select>
+    </div>
+        <br>
+    <span>请选择封面图片：</span>
+        <input name="tupian" type="file" accept="image/jpg,image/png,image/jpeg,image/gif" required='required'><br>
+    <span>是否推荐：</span>
+        <input name="recommend" type="checkbox"><br><br>
+    <span>作者：</span>
+    <input id="author" type="text" name="author" placeholder="请输入作者名" style="line-height: 30px;"><br><br>
+    <button id="btn1" onclick="return fun1()" type="submit" class="btn btn-primary btn-lg">确定</button>
+    </form>
+    </div>
+
+    <!-- 注意， 只需要引用 JS，无需引用任何 CSS ！！！-->
+    <script type="text/javascript" src="/static/js/wangEditor.min.js"></script>
+    <script type="text/javascript">
+        var E = window.wangEditor
+        var editor = new E('#editor')
+        editor.customConfig.uploadImgShowBase64 = true
+        // 或者 var editor = new E( document.getElementById('editor') )
+
+        editor.create()
+
+         document.getElementById('btn1').addEventListener('click', function () {
+        // 读取 html
+            {#alert(editor.txt.html())#}
+            $('#content').val(editor.txt.text())
+             $('#htmlcontent').val(editor.txt.html())
+        }, false)
+
+        document.getElementById('btn2').addEventListener('click', function () {
+            // 读取 text
+            alert(editor.txt.text())
+        }, false)
+
+
+
+        function fun1() {
+            if($('#title').val()=='' || $('#content').val()=='' || $('#author').val()==''){
+                return false
+            }
+            else{
+                return true
+            }
+        }
+
+    </script>
+{% endblock %}

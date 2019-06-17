@@ -1,0 +1,106 @@
+<head>
+    <style>
+        body{
+            background:linear-gradient(white,darkgray);
+        }
+        #all{
+             position: relative;
+            display: flex;
+            flex-wrap: wrap;
+            top:100px;
+        }
+         #list{
+            width:70%;
+            border-collapse: collapse;
+
+            margin-top: 30px;
+        }
+        .all_article{
+            width:100%;
+            height: 200px;
+            display: flex;
+
+            background-color: white;
+            margin-top:20px;
+        }
+        .all_article:hover{
+            box-shadow: 5px 5px 5px gray;
+        }
+         #right{
+            width:25%;
+            height: 500px;
+            padding-top: 50px;
+            padding-left: 30px;
+            margin-top:30px;
+        }
+        #footer{
+            position: absolute;
+            bottom: 10px !important;
+        }
+        @media (max-width: 800px){
+            .img{
+                width:100% !important;
+            }
+        }
+        @media (max-width: 800px){
+            .right,#right{
+                display: none;
+            }
+        }
+        #page{
+            position: relative;
+            top:30px;
+        }
+    </style>
+</head>
+{% extends 'base.html' %}
+{% block title %}
+    文章分类
+{% endblock %}
+{% block body %}
+    <div id="all" class="container">
+        <section id="list">
+            {% for article in page %}
+            <div class="all_article">
+                <img class="img" src="/{{ article.tupian }}" alt="" style="width: 30%; height: 90%;margin-right: 30px;position:relative;top:5%;">
+                <div class="right" style="width: 65%;position:relative;">
+                    <div><a href="/article/detail/{{ article.id }}/1/"><h3>{{ article.title }}</h3></a></div>
+                    <div><span class="content">{{ article.jianjie }}</span>...<a href="/article/detail/{{ article.id }}/1/">详情</a></div>
+                    <section id="footer">
+                    <span class="glyphicon glyphicon-user">{{ article.author }}</span>&#x3000;
+                    <span class="glyphicon glyphicon-time">{{ article.create_time }}</span>&#x3000;
+                    <span class="glyphicon glyphicon-thumbs-up">{{ article.popular }}</span>
+                </section>
+                </div>
+            </div>
+            {% endfor %}
+            {% if all_article %}
+                <div id="page" style="font-size: 20px;">
+                {% if page.has_previous %}
+                    <a href="/index/list/{{ type }}/{{ page.previous_page_number }}/">&lt;上一页</a>
+                {% endif %}
+
+                {% for num in page.paginator.page_range %}
+                    {% if page_num == num %}
+                        <a href="/index/list/{{ type }}/{{ num }}/" class="active">{{ num }}</a>
+                        {% else %}
+                        <a href="/index/list/{{ type }}/{{ num }}/">{{ num }}</a>
+                    {% endif %}
+                {% endfor %}
+
+				{% if page.has_next %}
+                    <a href="/index/list/{{ type }}/{{ page.next_page_number }}/">&lt;下一页</a>
+                {% endif %}
+
+            </div>
+            {% endif %}
+        </section>
+
+        <section id="right">
+            <h4>qq交流群：869914973</h4>
+            <span>微信公众号（佛系公众号）：</span>
+            <img src="/static/images/wx.jpg" style="width:200px;height: 200px;" alt="">
+        </section>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,230 @@
+<head>
+    <style>
+        body{
+            background-color: rgba(211, 211, 211, 0.15) !important;
+            height: 100%;
+        }
+        #all{
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            top:150px;
+
+        }
+        #leftbody{
+            width:70%;
+        }
+        #rightbody{
+            width: 25%;
+            height: 500px;
+            padding: 20px 0px 0 30px;
+        }
+        #htmlcontent{
+            font-size: 15px;
+            line-height: 25px;
+        }
+        img{
+            display: block;
+            margin: 10px auto;
+            max-width: 780px;
+        }
+
+        section{
+            width:100%;
+            height: 30px;
+            position: relative;
+        }
+        #zan:hover{
+            cursor: pointer;
+            color:red;
+        }
+        p{
+            text-indent: 2em;
+        }
+        #comment{
+            width: 100%;
+            margin-bottom: 100px;
+            background-color: white;
+            padding-top:50px;
+            padding-left: 30px;
+            padding-right: 30px;
+            position: relative;
+            top:300px;
+        }
+        #tijiao:hover{
+            background-color: lightgray;
+        }
+        #page{
+            font-weight: 900;
+            line-height: 40px;
+            font-size: 15px;
+        }
+        .huifu:hover,.huifu2:hover{
+            cursor: pointer;
+        }
+
+
+    </style>
+
+</head>
+{% extends 'base.html' %}
+{% load blog_tags %}
+
+{% block title %}
+    {{ article.title }}
+{% endblock %}
+{% block body %}
+
+    <main id="father">
+        <div class="container" id="all">
+        <div id="leftbody">
+            <h2 >{{ article.title }}</h2>
+            <section class="{{ request.session.user_id }}" id="{{ article.id }}">
+                <span class="glyphicon glyphicon-user">{{ article.author }}</span>&#x3000;
+                <span class="glyphicon glyphicon-time">{{ article.create_time }}</span>
+                <span id="zan" class="glyphicon glyphicon-thumbs-up" style="position:absolute;right:10px;{% if shifou == 1 %}color:red;{% endif %}"></span>
+                <input type="hidden" id="shifou" value="{{ shifou }}">
+            </section>
+            <div id="htmlcontent">
+                <input id="htmlcontent2" type="hidden" value="{{ article.htmlcontent }}">
+            </div>
+
+            <div id="comment">
+                <h4>请发表你的评论：</h4>
+                <form action="/article/detail/{{ article.id }}/1/" method="POST">
+                    {% csrf_token %}
+
+                    <textarea name="content" id="textarea" cols="100" maxlength="140" rows="5" style="resize: none;width:100%;"></textarea><br><br>
+                    <input type="submit" class="btn" onclick="return fun3()" value="评论" id="tijiao">
+                </form>
+                <hr style="background-color:black !important;height: 3px;">
+                {% for comment in page %}
+                <div style="width: 98%;display: flex;margin: 10px;border: 1px solid lightgray;">
+                    <div style="width: 10%;height: 80px;"><img src="/static/images/user.jpg" alt="" style="height: 100%;width:100%;"></div>
+                    <div style="width: 80%;margin-left: 20px;">
+                        <h3 style="margin: 0">{{ comment.user.username }}</h3>
+                        <span>{{ comment.content }}</span>
+                    </div>
+                    <span class="glyphicon glyphicon-comment huifu"  style="position:relative;top:50px;">回复</span>
+                </div>
+                <section style="width: 80%;height: 80px;position:relative;left: 18%;display: none;">
+                    <form action="/article/huifu/{{ comment.id }}/" method="post">
+                        {% csrf_token %}
+                    <textarea name="content" id="textarea2"  maxlength="140" rows="4" style="resize: none;width:100%;" placeholder="回复{{ comment.user }}:"></textarea>
+                        <input type="hidden" value="{{ article.id }}" name="article_id">
+                        <button type="submit" class="glyphicon glyphicon-comment huifu2" style="position:absolute;right:5px;top:60px!important;" >回复</button>
+                    </form>
+                </section>
+                {% for h in comment.id|huifu %}
+                <section style="width: 80%;position:relative;left: 18%;border-top:1px solid black;">
+                    <div>{{ h.user.username }}回复:{{ h.content }}</div>
+                </section>
+                    {% endfor %}
+                {% endfor %}
+                {% if comments %}
+                    <div id="page">
+                    {% if page.has_previous %}
+                        <a href="/article/detail/{{ article.id }}/{{ page.previous_page_number }}/">上一页</a>
+                    {% endif %}
+
+                    {% for num in page.paginator.page_range %}
+                        {% if page_num == num %}
+                            <a href="/article/detail/{{ article.id }}/{{ num }}/" class="active">{{ num }}</a>
+                            {% else %}
+                            <a href="/article/detail/{{ article.id }}/{{ num }}/">{{ num }}</a>
+                        {% endif %}
+                    {% endfor %}
+                    {% if page.has_next %}
+                        <a href="/article/detail/{{ article.id }}/{{ page.next_page_number }}/">下一页</a>
+                    {% endif %}
+
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div id="rightbody">
+            <h4>qq交流群：869914973</h4>
+        <span>微信公众号（佛系公众号）：</span>
+        <img src="/static/images/wx.jpg" style="width:200px;height: 200px;" alt="">
+        </div>
+    </div>
+    </main>
+
+    <script>
+        huifu=true
+        $('.huifu').click(function () {
+            if($('#zan').parent().attr('class')==''){
+                alert('请先登录')
+                return false
+            }
+            if(huifu==true){
+                huifu=false
+                $(this).parent().next().css('display','block')
+            }
+            else{
+                $(this).parent().next().css('display','none')
+                huifu=true
+            }
+        })
+        {#$('.huifu2').click(function () {#}
+        {#    comment_id=$(this).attr('id')#}
+        {#    url='/article/huifu/'+comment_id+'/'#}
+        {#    content=$('#textarea2').val()#}
+        {#    article_id=$('#zan').parent().attr('id')#}
+        {#    $.get(url,{'content':content,'article_id':article_id},function (){#}
+        {#        $(this).parent().css('display','none')#}
+        {#        huifu=true#}
+        {#    })#}
+        {#})#}
+
+        function fun3(){
+            if($('#zan').parent().attr('class')==''){
+                alert('请先登录')
+                return false
+            }
+            if($('#textarea').val()==''){
+                    return false
+                }
+                else{
+                    return true
+                }
+        }
+
+        $('#htmlcontent').html($('#htmlcontent2').val())
+        click=$('#shifou').val()
+
+        $('#zan').click(function () {
+            if(click==0){
+                article_id=$(this).parent().attr('id')
+                url='/article/zan/'+article_id+'/1/'
+                user=$(this).parent().attr('class')
+                if (user==''){
+                    alert('请先登录')
+                    return false
+                }else{
+                    $.get(url,function () {
+                        $('#zan').css('color','red')
+                        click=1
+                })
+                }
+            }
+            else{
+                 article_id=$(this).parent().attr('id')
+                url='/article/zan/'+article_id+'/0/'
+                user=$(this).parent().attr('class')
+                if (user==''){
+                    alert('请先登录')
+                    return false
+                }else{
+                    $.get(url,function () {
+                })
+                }
+                $(this).css('color','black')
+                 click=0
+            }
+
+        })
+    </script>
+
+{% endblock %}

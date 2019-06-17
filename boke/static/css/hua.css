@@ -1,0 +1,76 @@
+main{
+            width:1300px;
+            height: 500px;
+            /*border:1px solid red;*/
+            margin: 0 auto;
+            background-image: url(/static/images/caodi.png);
+            /* 设置背景图尺寸
+            值1：表示 宽的大小
+            值2：表示 高的大小 */
+            background-size:contain;
+            position: relative;
+            /* 定位属性 会使定宽居中失效
+            绝对定位和固定定位适用*/
+            /* position: fixed;
+            bottom: 0; */
+        }
+        section{
+            /* border:10px solid red; */
+            /* margin:0; */
+            position:relative;
+            bottom:-50px !important;
+            width:100%;
+        }
+        main>div{
+            width:350px;
+            height:350px;
+            background-image: url(/static/images/fengche.png);
+            /* contain包含：合适
+            自动调整大小 以达到适合标签大小的目的 */
+            background-size: contain;
+            position: absolute;
+            left:267px;
+            top:60px;
+            /* animation-name: xiazhuan; */
+            /* animation-duration: 2s; */
+            /* 设置动画运行速率 linear匀速 */
+            /* animation-timing-function: linear; */
+            /* 设置动画的运动次数 infinite永不停止 */
+            /* animation-iteration-count:infinite; */
+            animation:xiazhuan 4s linear infinite
+        }
+        /* 获取所有div当中的第二个 */
+        main>div:nth-child(2){
+            width:150px;
+            height:150px;
+            left:591px;
+            top:295px;
+            animation-duration: 2s;
+        }
+        main>div:nth-child(3){
+            width:200px;
+            height:200px;
+            left:753px;
+            top:225px;
+            animation-duration: 2.5s;
+        }
+        /* 当鼠标覆盖到div标签上的时候 */
+        main>div:hover{
+            animation-duration: 0.2s;
+        }
+        main>div:active{
+            animation-name:none;
+            /* 哪一句都可以 */
+            /* animation-duration: 0; */
+
+        }
+        @keyframes xiazhuan{
+            0%{
+                /* 变换；转变
+                rotate旋转 deg degree角度 */
+                transform: rotate(0deg);
+            }
+            100%{
+                transform: rotate(360deg);
+            }
+        }

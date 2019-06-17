@@ -1,0 +1,41 @@
+<head>
+    <style>
+        ul.messages {
+            margin:10px 100px;
+            padding:0;
+            list-style-type: none;
+            margin:0;
+            padding:14px 20px;
+            list-style:none;
+            color:#fff;
+            background:#81ce81;
+        }
+    </style>
+</head>
+{% extends 'base.html' %}
+
+{% block title %}个人中心
+{% endblock %}
+
+{% block body %}
+    <div style="position:relative; top:100px;" class="container">
+{#        <h1>这里是个人中心，你可以选择填你的个人信息，如果你的昵称为空的话，系统将显示你的用户名，如果头像为空的话，系统将使用默认的头像</h1>#}
+        {% if messages %}
+            <ul class="messages">
+            {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}<a href="" class="close">X</a></li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+        <form action="" method="post">
+            昵称：<input type="text" name="dick"><br><br>
+            电话：<input type="text" name="tel"><br><br>
+            性别：<input type="radio" name="sex" value="0">男
+            <input type="radio" name="sex" value="1">女<br><br>
+            地址：<input type="text" name="address"><br><br>
+            头像：<input type="file" name="touxiang" accept="image/jpg,image/png,image/jpeg,image/gif">
+            <input type="submit" value="确定">
+        </form>
+    </div>
+
+{% endblock %}
